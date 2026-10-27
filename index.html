@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="theme-color" content="#004173">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Geometria da Água — Laboratório de Geometria Espacial</title>
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+<link rel="icon" type="image/png" sizes="192x192" href="favicon.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header>
+  <div class="brand"><img src="logo.png" alt="Geometria da Água — Laboratório de Investigação em Geometria Espacial"></div>
+  <nav>
+    <button data-view="home">Início</button>
+    <button data-view="missions">Missões</button>
+    <button data-view="work" id="navlab">Laboratório</button>
+    <button data-view="formulas">Fórmulas</button>
+  </nav>
+  <div id="prog" title="Progresso da sessão"></div>
+</header>
+<main>
+
+<section id="home" class="view">
+  <div class="hero">
+    <div class="hero-t">
+      <h1>Quanta água cabe no seu projeto?</h1>
+      <p>Você é um engenheiro em formação. Dimensione reservatórios, teste hipóteses, compare projetos e escolha o melhor com Geometria Espacial.</p>
+      <div class="row">
+        <button class="btn" data-go="missions">Iniciar as investigações</button>
+        <button class="btn ghost" data-go="lab">Laboratório livre</button>
+      </div>
+    </div>
+    <div class="hero-v">
+      <canvas id="herocv" role="img" aria-label="Reservatório de vidro girando, com o nível da água subindo e descendo"></canvas>
+      <div class="chip" aria-hidden="true"><small>Água no reservatório</small><b id="herol">0 L</b></div>
+    </div>
+    <svg class="waves" viewBox="0 0 1200 70" preserveAspectRatio="none" aria-hidden="true">
+      <path class="w1" d="M0 36Q150 0 300 36T600 36T900 36T1200 36T1500 36T1800 36T2100 36T2400 36V70H0Z"/>
+      <path class="w2" d="M0 44Q150 78 300 44T600 44T900 44T1200 44T1500 44T1800 44T2100 44T2400 44V70H0Z"/>
+    </svg>
+  </div>
+  <div class="trio">
+    <article><span class="ico"><svg class="bare" viewBox="0 0 24 24" fill="none" stroke="#004173" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6"/><path d="M16 16l5 5"/></svg></span><h3>Investigar, não só calcular</h3><p>Cada missão pede experimentação: você salva vários projetos numa tabela, compara as linhas e escolhe um para concluir. O site oferece dicas graduais, nunca a resposta pronta.</p></article>
+    <article><span class="ico"><svg class="bare" viewBox="0 0 24 24" fill="none" stroke="#004173" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1"/></svg></span><h3>Objetivos educacionais</h3><p>Relacionar dimensões, área de material e volume; converter m³ e litros; distinguir reservatório aberto de fechado; perceber que solução viável não é, necessariamente, solução ótima.</p></article>
+    <article><span class="ico"><svg class="bare" viewBox="0 0 24 24" fill="none" stroke="#004173" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9z"/><path d="M12 12l8-4.5M12 12v9M12 12L4 7.5"/></svg></span><h3>Sobre esta versão</h3><p>Paralelepípedo, cubo e cilindro vertical, com 5 missões geométricas, um mapa investigativo sobre desigualdades no acesso à água e tabela de projetos imprimível. A visualização 3D é desenhada no próprio navegador, sem internet. O site apoia, mas não garante, um cenário para investigação: isso depende do planejamento do professor e da participação da turma (Skovsmose, 2000).</p></article>
+  </div>
+</section>
+
+<section id="missions" class="view" hidden>
+  <div class="mhead">
+    <div><h2>Missões</h2><p class="muted">Nas Missões 1 a 5, preços e limites são <b>dados didáticos</b>, não reais.</p></div>
+    <div id="mprog" class="mprog"></div>
+  </div>
+  <div id="mlist" class="mlist"></div>
+</section>
+
+<section id="work" class="view" hidden>
+  <div id="mbox" class="panel" hidden></div>
+  <div class="grid">
+    <div class="panel">
+      <h3>Visualização</h3>
+      <div class="vwrap">
+        <canvas id="cv" tabindex="0" role="img" aria-label="Reservatório em 3D. Arraste para girar, role para aproximar. As setas do teclado também giram e as teclas + e − aproximam."></canvas>
+        <div class="vbar"><button class="btn sm ghost" id="vin" aria-label="Aproximar">+</button><button class="btn sm ghost" id="vout" aria-label="Afastar">−</button><button class="btn sm ghost" id="vreset">Centralizar</button></div>
+        <p class="vhint" aria-hidden="true">Arraste para girar. Role para aproximar.</p>
+      </div>
+    </div>
+    <div class="panel">
+      <h3>Dimensões (metros)</h3>
+      <label class="row">Sólido <select id="shape"></select></label>
+      <label class="row"><input type="checkbox" id="open"> Aberto na parte superior (sem tampa)</label>
+      <div id="ctl"></div>
+      <div id="err" class="err"></div>
+      <h3>Resultados</h3>
+      <div id="res"></div>
+      <h3>Restrições</h3>
+      <ul id="cons" class="cons"></ul>
+      <div class="row"><button class="btn" id="saveproj">Salvar projeto</button></div>
+      <span id="saved" class="muted" role="status"></span>
+    </div>
+  </div>
+  <details id="condbox" class="panel" hidden>
+    <summary><b>Condições da investigação (laboratório livre)</b></summary>
+    <p class="muted">Defina condições opcionais. Limites técnicos: 12 m por dimensão (raio até 6 m).</p>
+    <div class="row"><label>Capacidade mínima (L) <input type="number" id="cu_minL" min="1" step="100"></label>
+      <label>Material máximo (m²) <input type="number" id="cu_maxMat" min="1" step="1"></label>
+      <label>Orçamento (R$) <input type="number" id="cu_bud" min="1" step="50"></label></div>
+    <div class="row"><button class="btn sm" id="cu_apply">Aplicar condições</button><button class="btn sm ghost" id="cu_chk">Verificar viabilidade</button><button class="btn sm ghost" id="cu_clr">Limpar</button></div>
+    <p id="cu_out" role="status"></p>
+  </details>
+  <div id="mwork" class="panel" hidden>
+    <h3>Meus projetos</h3>
+    <p class="muted">Salve vários projetos, compare as linhas (as setas ▲▼ mostram a variação em relação ao projeto anterior) e escolha um deles para concluir a missão.</p>
+    <p id="attsum" class="attsum" aria-live="polite"></p>
+    <div class="row"><button class="btn sm ghost" id="hintbtn">Pedir dica</button><button class="btn sm ghost" id="restart">Reiniciar missão</button><button class="btn sm ghost" id="print">Imprimir / salvar PDF</button></div>
+    <div id="hint" class="hint" aria-live="polite"></div>
+    <div class="tw"><table id="atttab" class="atttab" aria-label="Projetos salvos"></table></div>
+    <button class="btn" id="finish">Concluir missão com o projeto escolhido</button>
+    <div id="fb" class="fb" aria-live="polite"></div>
+  </div>
+</section>
+
+<section id="inv" class="view" hidden></section>
+
+<section id="formulas" class="view" hidden>
+  <h2>Matemática e fórmulas</h2>
+  <p class="muted">Cada fórmula abaixo traz: o desenho, o que significa cada letra, por que ela funciona e um exemplo com números. Os valores são didáticos.</p>
+  <div class="cards fcards"><div class="panel"><h3>Área do retângulo</h3><svg class="fig" viewBox="0 0 300 170" role="img" aria-label="Retângulo de comprimento c e largura l dividido em quadradinhos"><rect x="60" y="30" width="180" height="100" fill="#e6f4fb" stroke="#004173" stroke-width="1.5"/><line x1="80" y1="30" x2="80" y2="130" stroke="#004173" stroke-opacity=".3"/><line x1="100" y1="30" x2="100" y2="130" stroke="#004173" stroke-opacity=".3"/><line x1="120" y1="30" x2="120" y2="130" stroke="#004173" stroke-opacity=".3"/><line x1="140" y1="30" x2="140" y2="130" stroke="#004173" stroke-opacity=".3"/><line x1="160" y1="30" x2="160" y2="130" stroke="#004173" stroke-opacity=".3"/><line x1="180" y1="30" x2="180" y2="130" stroke="#004173" stroke-opacity=".3"/><line x1="200" y1="30" x2="200" y2="130" stroke="#004173" stroke-opacity=".3"/><line x1="220" y1="30" x2="220" y2="130" stroke="#004173" stroke-opacity=".3"/><line x1="60" y1="50" x2="240" y2="50" stroke="#004173" stroke-opacity=".3"/><line x1="60" y1="70" x2="240" y2="70" stroke="#004173" stroke-opacity=".3"/><line x1="60" y1="90" x2="240" y2="90" stroke="#004173" stroke-opacity=".3"/><line x1="60" y1="110" x2="240" y2="110" stroke="#004173" stroke-opacity=".3"/><text class="lb" x="150" y="150" text-anchor="middle">c</text><text class="lb" x="252" y="84">l</text></svg><p class="fm">A = c · l</p><ul class="sym"><li><b>A</b>: área da superfície, em m².</li><li><b>c</b>: comprimento, em m.</li><li><b>l</b>: largura, em m.</li></ul><p class="why">Por quê? O desenho divide a superfície em quadradinhos: são c fileiras com l quadradinhos cada.</p><div class="ex"><div class="ex-h">Exemplo</div><dl><dt>Dados</dt><dd>c = 4m e l = 3m</dd><dt>Conta</dt><dd>A = 4 · 3</dd><dt>Resposta</dt><dd><b>A = 12m²</b></dd></dl></div></div><div class="panel"><h3>Área do círculo</h3><svg class="fig" viewBox="0 0 300 170" role="img" aria-label="Círculo de raio r"><circle cx="150" cy="85" r="65" fill="#cfeaf6" stroke="#004173" stroke-width="1.5"/><line x1="150" y1="85" x2="215" y2="85" stroke="#b3261e" stroke-width="2"/><circle cx="150" cy="85" r="3" fill="#004173"/><text class="lb" x="178" y="77">r</text><text x="150" y="162" text-anchor="middle">r = distância do centro até a borda</text></svg><p class="fm">A = π · r²</p><ul class="sym"><li><b>r</b>: raio (do centro até a borda), em m.</li><li><b>π</b>: número fixo, ≈ 3,14.</li><li><b>r²</b>: r · r (não é 2 · r).</li></ul><p class="why">Por quê? A área do círculo equivale a π quadrados de lado r.</p><div class="ex"><div class="ex-h">Exemplo</div><dl><dt>Dados</dt><dd>r = 2m</dd><dt>Conta</dt><dd>A = π · 2² = π · 4</dd><dt>Resposta</dt><dd><b>A ≈ 12,57m²</b></dd></dl></div></div><div class="panel"><h3>Paralelepípedo (caixa)</h3><svg class="fig" viewBox="0 0 300 180" role="img" aria-label="Caixa com comprimento c, largura l e altura h, dividida em camadas"><path d="M40 140L95 100H245M95 100V45" fill="none" stroke="#004173" stroke-dasharray="4 3"/><polygon points="40,140 190,140 190,85 40,85" fill="#e6f4fb" stroke="#004173" stroke-width="1.5"/><polygon points="40,85 190,85 245,45 95,45" fill="#cfeaf6" stroke="#004173" stroke-width="1.5"/><polygon points="190,140 245,100 245,45 190,85" fill="#b9def0" stroke="#004173" stroke-width="1.5"/><line x1="40" y1="121.7" x2="190" y2="121.7" stroke="#004173"/><line x1="190" y1="121.7" x2="245" y2="81.7" stroke="#004173"/><line x1="40" y1="103.3" x2="190" y2="103.3" stroke="#004173"/><line x1="190" y1="103.3" x2="245" y2="63.3" stroke="#004173"/><text class="lb" x="115.0" y="160" text-anchor="middle">c</text><text class="lb" x="32" y="117.5" text-anchor="end">h</text><text class="lb" x="225.5" y="126.0">l</text></svg><ul class="sym"><li><b>c</b> comprimento, <b>l</b> largura, <b>h</b> altura (em m).</li><li><b>Ab = c · l</b>: área da base (o fundo).</li><li><b>Alat = 2 · h · (c + l)</b>: área das 4 paredes.</li><li><b>V = Ab · h</b>: volume, em m³.</li></ul><p class="why">Por quê V = Ab · h? São h camadas iguais empilhadas, cada uma com volume Ab.</p><div class="ex"><div class="ex-h">Exemplo</div><dl><dt>Dados</dt><dd>c = 4m, l = 3m e h = 2m</dd><dt>Base</dt><dd>Ab = 4 · 3 = <b>12m²</b></dd><dt>Paredes</dt><dd>Alat = 2 · 2 · (4 + 3) = <b>28m²</b></dd><dt>Volume</dt><dd>V = 12 · 2 = <b>24m³</b></dd></dl></div></div><div class="panel"><h3>Cubo</h3><svg class="fig" viewBox="0 0 300 180" role="img" aria-label="Cubo de aresta a"><path d="M80 150L120 110H210M120 110V20" fill="none" stroke="#004173" stroke-dasharray="4 3"/><polygon points="80,150 170,150 170,60 80,60" fill="#e6f4fb" stroke="#004173" stroke-width="1.5"/><polygon points="80,60 170,60 210,20 120,20" fill="#cfeaf6" stroke="#004173" stroke-width="1.5"/><polygon points="170,150 210,110 210,20 170,60" fill="#b9def0" stroke="#004173" stroke-width="1.5"/><text class="lb" x="125.0" y="170" text-anchor="middle">a</text><text class="lb" x="72" y="110.0" text-anchor="end">a</text><text class="lb" x="198.0" y="136.0">a</text></svg><ul class="sym"><li><b>a</b>: aresta (todas são iguais), em m.</li><li><b>Ab = a²</b>: base quadrada.</li><li><b>Alat = 4 · a²</b>: quatro paredes quadradas.</li><li><b>V = a³</b>: a · a · a.</li></ul><p class="why">O cubo é um paralelepípedo com c = l = h = a.</p><div class="ex"><div class="ex-h">Exemplo</div><dl><dt>Dados</dt><dd>a = 2m</dd><dt>Base</dt><dd>Ab = 2² = <b>4m²</b></dd><dt>Paredes</dt><dd>Alat = 4 · 4 = <b>16m²</b></dd><dt>Volume</dt><dd>V = 2³ = <b>8m³</b></dd></dl></div></div><div class="panel"><h3>Cilindro vertical</h3><svg class="fig" viewBox="0 0 300 180" role="img" aria-label="Cilindro de raio r e altura h"><path d="M100 135A50 14 0 0 1 200 135" fill="none" stroke="#004173" stroke-dasharray="4 3"/><path d="M100 45V135A50 14 0 0 0 200 135V45" fill="#e6f4fb" stroke="#004173" stroke-width="1.5"/><ellipse cx="150" cy="45" rx="50" ry="14" fill="#cfeaf6" stroke="#004173" stroke-width="1.5"/><line x1="150" y1="45" x2="200" y2="45" stroke="#b3261e" stroke-width="2"/><circle cx="150" cy="45" r="3" fill="#004173"/><text class="lb" x="172" y="39">r</text><line x1="216" y1="45" x2="216" y2="135" stroke="#004173"/><text class="lb" x="224" y="95">h</text></svg><ul class="sym"><li><b>r</b> raio da base e <b>h</b> altura (em m).</li><li><b>Ab = π · r²</b>: área do círculo da base.</li><li><b>Alat = 2π · r · h</b>: aberta, a parede vira um retângulo de largura 2π · r e altura h.</li><li><b>V = π · r² · h</b>: base vezes altura.</li></ul><div class="ex"><div class="ex-h">Exemplo</div><dl><dt>Dados</dt><dd>r = 1m e h = 2m</dd><dt>Base</dt><dd>Ab = π · 1² ≈ <b>3,14m²</b></dd><dt>Paredes</dt><dd>Alat = 2π · 1 · 2 ≈ <b>12,57m²</b></dd><dt>Volume</dt><dd>V = π · 1² · 2 ≈ <b>6,28m³</b></dd></dl></div></div><div class="panel"><h3>Material construído</h3><svg class="fig" viewBox="0 0 300 180" role="img" aria-label="Planificação de uma caixa aberta: fundo no centro e quatro paredes ao redor"><rect x="100" y="60" width="100" height="60" fill="#b9def0" stroke="#004173" stroke-width="1.5"/><rect x="100" y="20" width="100" height="40" fill="#e6f4fb" stroke="#004173" stroke-width="1.5"/><rect x="100" y="120" width="100" height="40" fill="#e6f4fb" stroke="#004173" stroke-width="1.5"/><rect x="60" y="60" width="40" height="60" fill="#e6f4fb" stroke="#004173" stroke-width="1.5"/><rect x="200" y="60" width="40" height="60" fill="#e6f4fb" stroke="#004173" stroke-width="1.5"/><text x="150" y="94" text-anchor="middle">fundo</text><text x="150" y="44" text-anchor="middle">parede</text><text x="150" y="144" text-anchor="middle">parede</text><text x="80" y="94" text-anchor="middle">pa-</text><text x="220" y="94" text-anchor="middle">pa-</text></svg><ul class="sym"><li><b>Aberto (sem tampa):</b> <span class="fm">material = Ab + Alat</span></li><li><b>Fechado (com tampa):</b> <span class="fm">material = 2 · Ab + Alat</span></li></ul><p class="why">Mais material não significa, sempre, mais capacidade: área e volume são grandezas diferentes.</p><div class="ex"><div class="ex-h">Exemplo (reservatório aberto)</div><dl><dt>Caixa A</dt><dd>4m × 3m × 2m: <b>40m²</b> e <b>24m³</b></dd><dt>Caixa B</dt><dd>6m × 4m × 1m: <b>44m²</b> e <b>24m³</b></dd><dt>Conclusão</dt><dd>mesmo volume, materiais diferentes</dd><dt>Fechada</dt><dd>caixa A com tampa: 40 + 12 = <b>52m²</b></dd></dl></div></div><div class="panel"><h3>Unidades: m³ e litros</h3><svg class="fig" viewBox="0 0 300 180" role="img" aria-label="Cubo de 1 metro de aresta"><path d="M80 150L120 110H210M120 110V20" fill="none" stroke="#004173" stroke-dasharray="4 3"/><polygon points="80,150 170,150 170,60 80,60" fill="#e6f4fb" stroke="#004173" stroke-width="1.5"/><polygon points="80,60 170,60 210,20 120,20" fill="#cfeaf6" stroke="#004173" stroke-width="1.5"/><polygon points="170,150 210,110 210,20 170,60" fill="#b9def0" stroke="#004173" stroke-width="1.5"/><text class="lb" x="125.0" y="170" text-anchor="middle">1m</text><text class="lb" x="72" y="110.0" text-anchor="end">1m</text><text class="lb" x="198.0" y="136.0">1m</text></svg><p class="fm">1m³ = 1.000L</p><ul class="sym"><li>Um cubo de 1m de aresta mede 10dm × 10dm × 10dm = 1.000dm³, e 1dm³ é 1 litro.</li><li><b>m³ → L:</b> multiplique por 1.000.</li><li><b>L → m³:</b> divida por 1.000.</li></ul><div class="ex"><div class="ex-h">Exemplo</div><dl><dt>De m³ para L</dt><dd>24m³ = 24 · 1.000 = <b>24.000L</b></dd><dt>De L para m³</dt><dd>15.000L = 15.000 ÷ 1.000 = <b>15m³</b></dd></dl></div></div><div class="panel"><h3>Custo didático</h3><svg class="fig" viewBox="0 0 300 180" role="img" aria-label="Duas barras: o fundo custa R$ 120 por metro quadrado e a parede custa R$ 80"><line x1="40" y1="140" x2="260" y2="140" stroke="#004173"/><rect x="70" y="40" width="60" height="100" fill="#b9def0" stroke="#004173" stroke-width="1.5"/><rect x="170" y="73" width="60" height="67" fill="#e6f4fb" stroke="#004173" stroke-width="1.5"/><text class="lb" x="100" y="32" text-anchor="middle">R$ 120</text><text class="lb" x="200" y="65" text-anchor="middle">R$ 80</text><text x="100" y="158" text-anchor="middle">fundo (por m²)</text><text x="200" y="158" text-anchor="middle">parede (por m²)</text></svg><ul class="sym"><li><b>Custo = fundo · R$ 120 + paredes · R$ 80</b> (preços fictícios, por m²).</li><li>Reservatório fechado: a tampa conta como fundo (2 · Ab).</li><li>Como o fundo é mais caro, o projeto de menor material nem sempre é o mais barato.</li></ul><div class="ex"><div class="ex-h">Exemplo (reservatório aberto)</div><dl><dt>Dados</dt><dd>caixa 4m × 3m × 2m, aberta</dd><dt>Fundo</dt><dd>12m² · 120 = <b>R$ 1.440</b></dd><dt>Paredes</dt><dd>28m² · 80 = <b>R$ 2.240</b></dd><dt>Total</dt><dd><b>R$ 3.680</b></dd></dl></div></div></div>
+</section>
+</main>
+<div id="printarea"></div>
+<script src="script.js"></script>
+</body>
+</html>
